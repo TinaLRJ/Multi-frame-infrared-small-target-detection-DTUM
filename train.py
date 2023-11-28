@@ -50,7 +50,7 @@ def generate_savepath(args, epoch, epoch_loss):
 def parse_args():
     """Training Options for Segmentation Experiments"""
     parser = argparse.ArgumentParser(description='Infrared_target_detection_overall')
-    parser.add_argument('--DataPath',  type=str, default='E:\基于深度学习的小目标检测\数据集建立\目标_数据制作_lrj/', help='Dataset path [default: ./dataset/]')
+    parser.add_argument('--DataPath',  type=str, default='./dataset/', help='Dataset path [default: ./dataset/]')
     parser.add_argument('--dataset',   type=str, default='NUDT-MIRSDT', help='Dataset name [dafult: NUDT-MIRSDT]')
     parser.add_argument('--training_rate', type=int, default=1, help='Rate of samples in training (1/n) [default: 1]')
     parser.add_argument('--saveDir',   type=str, default='./results/',
