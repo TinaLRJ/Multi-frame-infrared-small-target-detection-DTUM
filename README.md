@@ -9,6 +9,7 @@ Pytorch implementation of our Direction-coded Temporal U-shape Module (DTUM).&nb
 - mmdet
 - tqbm
 - DCNv2
+- scikit-image
 <br><br>
 
 ## Datasets
