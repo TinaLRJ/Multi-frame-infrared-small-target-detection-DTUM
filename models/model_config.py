@@ -6,7 +6,7 @@ from models.model_ACM import ACM
 from models.model_alcnet import ASKCResNetFPN as ALCNet
 from models.model_alcnet import ALCNet_DTUM
 from models.model_DNANet import Res_CBAM_block
-from models.model_res_UNet_nest import Res_block
+from models.model_res_UNet import Res_block
 from models.model_ISNet.ISNet import ISNet, ISNet_woTFD, ISNet_DTUM
 from models.model_ISNet.train_ISNet import Get_gradient_nopadding
 from models.model_UIU.uiunet import UIUNET, UIUNET_DTUM
