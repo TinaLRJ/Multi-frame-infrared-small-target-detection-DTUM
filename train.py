@@ -105,7 +105,7 @@ class Trainer(object):
         if args.dataset == 'NUDT-MIRSDT':
             self.train_dataset = TrainSetLoader(train_path, fullSupervision=args.fullySupervised)
             self.val_dataset = TestSetLoader(self.test_path)
-        elif args.dataset == 'IRSDT':
+        elif args.dataset == 'IRDST':
             self.train_dataset = IRDST_TrainSetLoader(train_path)
             self.val_dataset = IRDST_TestSetLoader(self.test_path)
         self.train_loader = DataLoader(self.train_dataset, batch_size=args.batchsize, shuffle=True, drop_last=True)
