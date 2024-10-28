@@ -45,7 +45,7 @@ class IRDST_TrainSetLoader(Dataset):
         # Mix preprocess
         img = (img - self.train_mean)/self.train_std
         img = torch.unsqueeze(torch.from_numpy(img), 0)
-        label = torch.unsqueeze(torch.from_numpy(img), 0)
+        label = torch.unsqueeze(torch.from_numpy(label), 0)
 
         [_, m, n] = np.shape(label)
         return img, label, m, n
@@ -93,7 +93,7 @@ class IRDST_TestSetLoader(Dataset):
         # Mix preprocess
         img = (img - self.train_mean)/self.train_std
         img = torch.unsqueeze(torch.from_numpy(img), 0)
-        label = torch.unsqueeze(torch.from_numpy(img), 0)
+        label = torch.unsqueeze(torch.from_numpy(label), 0)
 
         [_, m, n] = np.shape(label)
         return img, label, m, n
