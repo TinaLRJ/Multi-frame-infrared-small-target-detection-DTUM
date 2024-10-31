@@ -28,7 +28,7 @@ class IRDST_TrainSetLoader(Dataset):
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
         img_ori = cv2.imread(img_path)
-        img = np.array(img_ori, dtype=np.float32)
+        img = img_ori.astype(np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
         img = np.expand_dims(img, axis=0)
@@ -38,10 +38,9 @@ class IRDST_TrainSetLoader(Dataset):
             img_his = cv2.imread(img_hispath)
             if self.align:
                 img_his = matching(img_his, img_ori)
-            img_his= np.array(img_his, dtype=np.float32)
             if np.ndim(img_his) == 3:
                 img_his= img_his[:,:,0]
-            img_his = np.expand_dims(img_his, axis=0)
+            img_his = np.expand_dims(img_his.astype(np.float32), axis=0)
             img= np.concatenate((img_his, img), axis=0)
 
 
@@ -81,7 +80,7 @@ class IRDST_TestSetLoader(Dataset):
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
         img_ori = cv2.imread(img_path)
-        img = np.array(img_ori, dtype=np.float32)
+        img = img_ori.astype(np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
         img = np.expand_dims(img, axis=0)
@@ -91,10 +90,9 @@ class IRDST_TestSetLoader(Dataset):
             img_his = cv2.imread(img_hispath)
             if self.align:
                 img_his = matching(img_his, img_ori)
-            img_his = np.array(img_his, dtype=np.float32)
             if np.ndim(img_his) == 3:
                 img_his = img_his[:,:,0]
-            img_his = np.expand_dims(img_his, axis=0)
+            img_his = np.expand_dims(img_his.astype(np.float32), axis=0)
             img= np.concatenate((img_his, img), axis=0)
 
 
