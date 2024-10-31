@@ -53,6 +53,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Infrared_target_detection_overall')
     parser.add_argument('--DataPath',  type=str, default='./dataset/', help='Dataset path [default: ./dataset/]')
     parser.add_argument('--dataset',   type=str, default='NUDT-MIRSDT', help='Dataset name [dafult: NUDT-MIRSDT]')
+    parser.add_argument('--align',  default='False', action='store_true', help='align input frames')
     parser.add_argument('--training_rate', type=int, default=1, help='Rate of samples in training (1/n) [default: 1]')
     parser.add_argument('--saveDir',   type=str, default='./results/',
                             help='Save path [defaule: ./results/]')
@@ -106,8 +107,8 @@ class Trainer(object):
             self.train_dataset = TrainSetLoader(train_path, fullSupervision=args.fullySupervised)
             self.val_dataset = TestSetLoader(self.test_path)
         elif args.dataset == 'IRDST':
-            self.train_dataset = IRDST_TrainSetLoader(train_path)
-            self.val_dataset = IRDST_TestSetLoader(self.test_path)
+            self.train_dataset = IRDST_TrainSetLoader(train_path, fullSupervision=args.fullySupervised, align=args.align)
+            self.val_dataset = IRDST_TestSetLoader(self.test_path, align=args.align)
         self.train_loader = DataLoader(self.train_dataset, batch_size=args.batchsize, shuffle=True, drop_last=True)
         self.val_loader = DataLoader(self.val_dataset, batch_size=1, shuffle=False, )
 
