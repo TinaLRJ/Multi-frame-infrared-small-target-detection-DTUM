@@ -5,17 +5,19 @@ from torch.utils.data import Dataset
 from numpy import *
 import numpy as np
 import scipy.io as scio
+from match_images import matching
 
 
 #load image
 class IRDST_TrainSetLoader(Dataset):
-    def __init__(self, root, fullSupervision=True):
+    def __init__(self, root, fullSupervision=True, align=True):
 
         txtpath = root + 'img_idx/train_IRDST-simulation.txt'
         txt = np.loadtxt(txtpath, dtype=bytes).astype(str)
         self.imgs_arr = txt
         self.root = root
         self.fullSupervision = fullSupervision
+        self.align = align
         self.train_mean = 106.8523
         self.train_std = 56.9243
 
@@ -24,14 +26,18 @@ class IRDST_TrainSetLoader(Dataset):
         img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + 'bmp')
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
-        img = np.array(Image.open(img_path), dtype=np.float32)
+        img_ori = Image.open(img_path)
+        img = np.array(img_ori, dtype=np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
         img = np.expand_dims(img, axis=0)
 
         for i in range(1,5):
             img_hispath = os.path.join(self.root, imgfolder, seq, str(max(frame-i, 1)) + '.bmp')
-            img_his= np.array(Image.open(img_hispath), dtype=np.float32)
+            img_his = Image.open(img_hispath)
+            if self.align:
+                img_his = matching(img_his, img_ori)
+            img_his= np.array(img_his, dtype=np.float32)
             if np.ndim(img_his) == 3:
                 img_his= img_his[:,:,0]
             img_his = np.expand_dims(img_his, axis=0)
@@ -57,13 +63,14 @@ class IRDST_TrainSetLoader(Dataset):
 
 
 class IRDST_TestSetLoader(Dataset):
-    def __init__(self, root, fullSupervision=True):
+    def __init__(self, root, fullSupervision=True, align=True):
 
         txtpath = root + 'img_idx/test_IRDST-simulation.txt'
         txt = np.loadtxt(txtpath, dtype=bytes).astype(str)
         self.imgs_arr = txt
         self.root = root
         self.fullSupervision = fullSupervision
+        self.align = align
         self.train_mean = 106.8523
         self.train_std = 56.9243
 
@@ -72,16 +79,20 @@ class IRDST_TestSetLoader(Dataset):
         img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + 'bmp')
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
-        img = np.array(Image.open(img_path), dtype=np.float32)
+        img_ori = Image.open(img_path)
+        img = np.array(img_ori, dtype=np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
         img = np.expand_dims(img, axis=0)
 
         for i in range(1,5):
             img_hispath = os.path.join(self.root, imgfolder, seq, str(max(frame-i, 1)) + '.bmp')
-            img_his= np.array(Image.open(img_hispath), dtype=np.float32)
+            img_his = Image.open(img_hispath)
+            if self.align:
+                img_his = matching(img_his, img_ori)
+            img_his = np.array(img_his, dtype=np.float32)
             if np.ndim(img_his) == 3:
-                img_his= img_his[:,:,0]
+                img_his = img_his[:,:,0]
             img_his = np.expand_dims(img_his, axis=0)
             img= np.concatenate((img_his, img), axis=0)
 
