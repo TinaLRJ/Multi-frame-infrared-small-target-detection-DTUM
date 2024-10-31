@@ -41,7 +41,6 @@ python train.py --model 'ResUNet_DTUM' --loss_func 'fullySup' --train 0 --test 1
 python train.py --dataset IRDST --align --model 'ResUNet_DTUM' --loss_func 'fullySup' --train 1 --test 0 --fullySupervised True
 ```
 If the background in a sequence is not aligned, the parameter of "align" needs to be set to True.
-
 <br>
 
 
