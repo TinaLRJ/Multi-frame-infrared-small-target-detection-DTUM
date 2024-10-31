@@ -21,7 +21,7 @@ We divide the test set into two subsets according to their SNR ((0, 3], (3, 10))
 In the test set, targets in 8 sequences are so weak (SNR lower than 3). It is very challenging to detect these targets.
 
 
-## Train
+## Train on NUDT-MIRSDT Dataset
 ```bash
 python train.py --model 'ResUNet_DTUM' --loss_func 'fullySup' --train 1 --test 0 --fullySupervised True
 python train.py --model 'DNANet_DTUM' --loss_func 'fullySup1' --train 1 --test 0 --fullySupervised True --SpatialDeepSup False
@@ -29,10 +29,19 @@ python train.py --model 'DNANet_DTUM' --loss_func 'fullySup1' --train 1 --test 0
 <br>
 
 
-## Test
+## Test on NUDT-MIRSDT Dataset
 ```bash
 python train.py --model 'ResUNet_DTUM' --loss_func 'fullySup' --train 0 --test 1 --pth_path [trained model path]
 ```
+<br>
+
+
+## Train on IRDST Dataset (or other datasets)
+```bash
+python train.py --dataset IRDST --align --model 'ResUNet_DTUM' --loss_func 'fullySup' --train 1 --test 0 --fullySupervised True
+```
+If the background in a sequence is not aligned, the parameter of "align" needs to be set to True.
+
 <br>
 
 
