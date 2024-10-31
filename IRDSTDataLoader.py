@@ -45,7 +45,7 @@ class IRDST_TrainSetLoader(Dataset):
 
         # Read Label/Tgt
         label_path = img_path.replace(imgfolder, 'masks')
-        label = np.array(Image.open(label_path), dtype=np.float32) / 255.0
+        label = cv2.imread(label_path).astype(np.float32) / 255.0
 
         # Mix preprocess
         img = (img - self.train_mean)/self.train_std
@@ -96,7 +96,7 @@ class IRDST_TestSetLoader(Dataset):
 
         # Read Label/Tgt
         label_path = img_path.replace(imgfolder, 'masks')
-        label = np.array(Image.open(label_path), dtype=np.float32) / 255.0
+        label = cv2.imread(label_path).astype(np.float32) / 255.0
 
         # Mix preprocess
         img = (img - self.train_mean)/self.train_std
