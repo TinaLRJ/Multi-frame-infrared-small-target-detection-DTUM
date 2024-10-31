@@ -52,8 +52,8 @@ def matching(his_img, img):
     return his_img_match
 
 
-if __name__ == '__main__':
-    his_img = cv2.imread('./0.bmp')
-    img = cv2.imread('./20.bmp')
-    his_img_match = matching(his_img, img)
-    lrj = 1
+# if __name__ == '__main__':
+#     his_img = cv2.imread('./0.bmp')
+#     img = cv2.imread('./20.bmp')
+#     his_img_match = matching(his_img, img)
+#     lrj = 1
