@@ -28,8 +28,6 @@ class IRDST_TrainSetLoader(Dataset):
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
         img_ori = cv2.imread(img_path)
-        if self.align and np.dim(img_ori) == 2:
-            img_ori = np.concatenate((img_ori[:,:,np.newaxis], img_ori[:,:,np.newaxis], img_ori[:,:,np.newaxis]), axis=2)
         img = img_ori.astype(np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
@@ -39,8 +37,6 @@ class IRDST_TrainSetLoader(Dataset):
             img_hispath = os.path.join(self.root, imgfolder, seq, str(max(frame-i, 1)) + '.bmp')
             img_his = cv2.imread(img_hispath)
             if self.align:
-                if np.dim(img_his) == 2:
-                    img_his = np.concatenate((img_his[:,:,np.newaxis], img_his[:,:,np.newaxis], img_his[:,:,np.newaxis]), axis=2)
                 img_his = matching(img_his, img_ori)
             if np.ndim(img_his) == 3:
                 img_his= img_his[:,:,0]
@@ -84,8 +80,6 @@ class IRDST_TestSetLoader(Dataset):
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
         img_ori = cv2.imread(img_path)
-        if self.align and np.dim(img_ori) == 2:
-            img_ori = np.concatenate((img_ori[:,:,np.newaxis], img_ori[:,:,np.newaxis], img_ori[:,:,np.newaxis]), axis=2)
         img = img_ori.astype(np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
@@ -95,8 +89,6 @@ class IRDST_TestSetLoader(Dataset):
             img_hispath = os.path.join(self.root, imgfolder, seq, str(max(frame-i, 1)) + '.bmp')
             img_his = cv2.imread(img_hispath)
             if self.align:
-                if np.dim(img_his) == 2:
-                    img_his = np.concatenate((img_his[:,:,np.newaxis], img_his[:,:,np.newaxis], img_his[:,:,np.newaxis]), axis=2)
                 img_his = matching(img_his, img_ori)
             if np.ndim(img_his) == 3:
                 img_his = img_his[:,:,0]
