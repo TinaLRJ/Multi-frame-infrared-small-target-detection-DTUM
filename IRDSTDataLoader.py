@@ -5,6 +5,7 @@ from torch.utils.data import Dataset
 from numpy import *
 import numpy as np
 import scipy.io as scio
+import cv2
 from match_images import matching
 
 
@@ -26,7 +27,7 @@ class IRDST_TrainSetLoader(Dataset):
         img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + 'bmp')
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
-        img_ori = Image.open(img_path)
+        img_ori = cv2.imread(img_path)
         img = np.array(img_ori, dtype=np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
@@ -34,7 +35,7 @@ class IRDST_TrainSetLoader(Dataset):
 
         for i in range(1,5):
             img_hispath = os.path.join(self.root, imgfolder, seq, str(max(frame-i, 1)) + '.bmp')
-            img_his = Image.open(img_hispath)
+            img_his = cv2.imread(img_hispath)
             if self.align:
                 img_his = matching(img_his, img_ori)
             img_his= np.array(img_his, dtype=np.float32)
@@ -79,7 +80,7 @@ class IRDST_TestSetLoader(Dataset):
         img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + 'bmp')
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
-        img_ori = Image.open(img_path)
+        img_ori = cv2.imread(img_path)
         img = np.array(img_ori, dtype=np.float32)
         if np.dim(img) == 3:
             img = img[:,:,0]
@@ -87,7 +88,7 @@ class IRDST_TestSetLoader(Dataset):
 
         for i in range(1,5):
             img_hispath = os.path.join(self.root, imgfolder, seq, str(max(frame-i, 1)) + '.bmp')
-            img_his = Image.open(img_hispath)
+            img_his = cv2.imread(img_hispath)
             if self.align:
                 img_his = matching(img_his, img_ori)
             img_his = np.array(img_his, dtype=np.float32)
