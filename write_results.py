@@ -36,24 +36,24 @@ def writeNUDTMIRSDT_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch
     writelines.write('Low SNR results:\tAUC:%.5f\n' % auc_lSNR)
     for th_i in range(len(Th_Seg)):
         writelines.write(
-            'Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[0:8, th_i].sum(),
-                                                               TgtNumAll[0:8, th_i].sum(),
-                                                               TrueNumAll[0:8, th_i].sum() / TgtNumAll[0:8,
+            'Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[index[0:8], th_i].sum(),
+                                                               TgtNumAll[index[0:8], th_i].sum(),
+                                                               TrueNumAll[index[0:8], th_i].sum() / TgtNumAll[index[0:8],
                                                                                              th_i].sum(),
-                                                               FalseNumAll[0:8, th_i].sum(),
-                                                               FalseNumAll[0:8, th_i].sum() / pixelsNumber[
-                                                                                              0:8].sum()))
+                                                               FalseNumAll[index[0:8], th_i].sum(),
+                                                               FalseNumAll[index[0:8], th_i].sum() / pixelsNumber[
+                                                                                              index[0:8]].sum()))
 
     writelines.write('High SNR results:\tAUC:%.5f\n' % auc_hSNR)
     for th_i in range(len(Th_Seg)):
         writelines.write(
-            'Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[8:, th_i].sum(),
-                                                               TgtNumAll[8:, th_i].sum(),
-                                                               TrueNumAll[8:, th_i].sum() / TgtNumAll[8:,
+            'Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[index[8:], th_i].sum(),
+                                                               TgtNumAll[index[8:], th_i].sum(),
+                                                               TrueNumAll[index[8:], th_i].sum() / TgtNumAll[index[8:],
                                                                                             th_i].sum(),
-                                                               FalseNumAll[8:, th_i].sum(),
-                                                               FalseNumAll[8:, th_i].sum() / pixelsNumber[
-                                                                                             8:].sum()))
+                                                               FalseNumAll[index[8:], th_i].sum(),
+                                                               FalseNumAll[index[8:], th_i].sum() / pixelsNumber[
+                                                                                             index[8:]].sum()))
 
     writelines.write('Final results:\tAUC:%.5f\n' % auc_all)
     for th_i in range(len(Th_Seg)):
