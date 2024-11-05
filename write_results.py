@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.metrics import auc
 
 
-def writeIRSeq_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_Seg, test_txt, save_path, args, epoch):
+def writeNUDTMIRSDT_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_Seg, test_txt, save_path, args, epoch):
     low_snr3 = [47, 56, 59, 76, 92, 101, 105, 119]
     high_snr3 = [85, 86, 87, 88, 89, 90, 91, 93, 94, 95, 96, 97]
     seq_names = list(dict.fromkeys([int(x.split('/')[0].split('Sequence')[1]) for x in test_txt]))
@@ -73,7 +73,7 @@ def writeIRSeq_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_
     return
 
 
-def writeIRDSTs_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_Seg, save_path, args, epoch):
+def writeIRSeq_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_Seg, save_path, args, epoch):
     FalseNumAll = np.array(FalseNumBatch).sum(axis=0)
     TrueNumAll = np.array(TrueNumBatch).sum(axis=0)
     TgtNumAll = np.array(TgtNumBatch).sum(axis=0)
