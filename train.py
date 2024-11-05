@@ -227,22 +227,16 @@ class Trainer(object):
         txt = np.loadtxt(self.test_path + 'test.txt', dtype=bytes).astype(str)
         self.net.eval()
 
-        low_snr3 = [47,56,59,76,92,101,105,119]
-        high_snr3 = [85,86,87,88,89,90,91,93,94,95,96,97]
-
         Th_Seg = np.array(
             [0, 1e-30, 1e-20, 1e-19, 1e-18, 1e-17, 1e-16, 1e-15, 1e-14, 1e-13, 1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7,
              1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, .15, 0.2, .25, 0.3, .35, 0.4, .45, 0.5, .55, 0.6, .65, 0.7, .75,
              0.8, .85, 0.9, 0.95, 0.975, 0.98, 0.99, 0.995, 0.999, 0.9995, 0.9999, 0.99999, 0.999999, 0.9999999, 1])
         if epoch < args.epochs-1:
             Th_Seg = np.array([0, 1e-1, 0.2, 0.3, .35, 0.4, .45, 0.5, .55, 0.6, .65, 0.7, 0.8, 0.9, 0.95, 1])
-        FalseNumAll = np.zeros([20,len(Th_Seg)])
-        TrueNumAll = np.zeros([20,len(Th_Seg)])
-        TgtNumAll = np.zeros([20,len(Th_Seg)])
 
         OldFlag = 0
         Old_Feat = torch.zeros([1,32,4,512,512]).to(self.device)  # interface for iteration input
-        pixelsNumber = np.zeros(20)
+        FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch = [], [], [], []
         time_start = time.time()
         for i, data in enumerate(tqdm(self.val_loader), 0):
             # if i > 5: break
@@ -250,8 +244,6 @@ class Trainer(object):
                 OldFlag = 0
             else:
                 OldFlag = 1
-            Seq_num = int(txt[i].split('Sequence')[1].split('/Mix')[0])
-            index = (low_snr3+high_snr3).index(Seq_num)
 
             with torch.no_grad():
                 SeqData_t, TgtData_t, m, n = data
@@ -274,17 +266,17 @@ class Trainer(object):
                 pixelsNumber[index] += m * n
                 if self.save_flag:
                     img = Image.fromarray(uint8(TestOut * 255))
-                    folder_name = "%sSequence%d/" % (self.test_save, Seq_num)
+                    folder_name = "%s%s/" % (self.test_save, txt[i].split('/')[0])
                     if not os.path.exists(folder_name):
                         os.mkdir(folder_name)
-                    name = folder_name + ('%05d.png' % (i % 100 + 1))
+                    name = folder_name + txt[i].split('/')[-1].split('.')[0] + '.png'
                     img.save(name)
-                    save_name = folder_name + ('%05d.mat' % (i % 100 + 1))
+                    save_name = folder_name + txt[i].split('/')[-1].split('.')[0] + '.mat'
                     scio.savemat(save_name, {'TestOut': TestOut})
 
                     if 'ISNet' in args.model:   ## and args.model != 'ISNet_woTFD'
                         edge_out = Image.fromarray(uint8(edge_out * 255))
-                        edge_name = folder_name + ('%05d_EdgeOut.png' % (i % 100 + 1))
+                        edge_name = folder_name + txt[i].split('/')[-1].split('.')[0] + '_EdgeOut.png'
                         edge_out.save(edge_name)
 
                 # the statistics for detection result
@@ -292,57 +284,18 @@ class Trainer(object):
                     for th_i in range(len(Th_Seg)):
                         FalseNum, TrueNum, TgtNum = self.eval_metrics(Outputs_Max[:,:,:m,:n], TgtData[:,:,:m,:n], Th_Seg[th_i])
 
-                        FalseNumAll[index, th_i] = FalseNumAll[index, th_i] + FalseNum
-                        TrueNumAll[index, th_i] = TrueNumAll[index, th_i] + TrueNum
-                        TgtNumAll[index, th_i] = TgtNumAll[index, th_i] + TgtNum
+                        FalseNumBatch.append(FalseNum)
+                        TrueNumBatch.append(TrueNum)
+                        TgtNumBatch.append(TgtNum)
 
         time_end = time.time()
         print('FPS=%.3f' % ((i+1)/(time_end-time_start)))
 
         if self.writeflag:
-
-            Pd_lSNR = np.sum(TrueNumAll[0:8, :], axis=0) / np.sum(TgtNumAll[0:8, :], axis=0)
-            Pd_hSNR = np.sum(TrueNumAll[8:, :], axis=0) / np.sum(TgtNumAll[8:, :], axis=0)
-            Pd_all = np.sum(TrueNumAll[:, :], axis=0) / np.sum(TgtNumAll[:, :], axis=0)
-            Fa_lSNR = np.sum(FalseNumAll[0:8, :], axis=0) / pixelsNumber[0:8].sum()
-            Fa_hSNR = np.sum(FalseNumAll[8:, :], axis=0) / pixelsNumber[8:].sum()
-            Fa_all = np.sum(FalseNumAll[:, :], axis=0) / pixelsNumber.sum()
-            auc_lSNR = auc(Fa_lSNR, Pd_lSNR)
-            auc_hSNR = auc(Fa_hSNR, Pd_hSNR)
-            auc_all = auc(Fa_all, Pd_all)
-
-            writelines = open(self.SavePath + 'Epoch' + str(epoch+1) + '_ROC_ShootingRules.txt', 'w')
-            for i in range(20):
-                seq = (low_snr3+high_snr3)[i]
-                writelines.write('Seq' + str(seq) + 'results:\n')
-                for seg_i in range(len(Th_Seg)):
-                    writelines.write('Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[seg_i], TrueNumAll[i, seg_i], TgtNumAll[i, seg_i],
-                                TrueNumAll[i, seg_i] / TgtNumAll[i, seg_i], FalseNumAll[i, seg_i], FalseNumAll[i, seg_i] / pixelsNumber[i]))
-
-            writelines.write('Low SNR results:\tAUC:%.5f\n' % auc_lSNR)
-            for th_i in range(len(Th_Seg)):
-                writelines.write('Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[0:8, th_i].sum(),
-                                TgtNumAll[0:8, th_i].sum(), TrueNumAll[0:8, th_i].sum() / TgtNumAll[0:8, th_i].sum(),
-                                FalseNumAll[0:8, th_i].sum(), FalseNumAll[0:8, th_i].sum() / pixelsNumber[0:8].sum()))
-
-            writelines.write('High SNR results:\tAUC:%.5f\n' % auc_hSNR)
-            for th_i in range(len(Th_Seg)):
-                writelines.write('Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[8:, th_i].sum(),
-                                TgtNumAll[8:, th_i].sum(), TrueNumAll[8:, th_i].sum() / TgtNumAll[8:, th_i].sum(),
-                                FalseNumAll[8:, th_i].sum(), FalseNumAll[8:, th_i].sum() / pixelsNumber[8:].sum()))
-
-            writelines.write('Final results:\tAUC:%.5f\n' % auc_all)
-            for th_i in range(len(Th_Seg)):
-                writelines.write('Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[:, th_i].sum(),
-                                TgtNumAll[:, th_i].sum(), TrueNumAll[:, th_i].sum() / TgtNumAll[:, th_i].sum(),
-                                FalseNumAll[:, th_i].sum(), FalseNumAll[:, th_i].sum() / pixelsNumber.sum()))
-            writelines.close()
-
-            seg = 29
-            if epoch < args.epochs-1:
-                seg = 7
-            print('model: %s, epoch: %d, Th_Seg = %.4e, PD:[%d, %.5f], FA:[%d, %.4e], AUC:%.5f' % (args.model + args.loss_func, epoch + 1,
-                Th_Seg[seg], TrueNumAll[:,seg].sum(), Pd_all[seg], FalseNumAll[:,seg].sum(), Fa_all[seg], auc_all))
+            if 'NUDT-MIRSDT' in args.dataset:
+                writeNUDTMIRSDT_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_Seg, txt, self.SavePath, args, epoch)
+            else:
+                writeIRSeq_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_Seg, self.SavePath, args, epoch)
 
 
     def savemodel(self, epoch):
