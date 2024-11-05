@@ -24,7 +24,7 @@ class IRDST_TrainSetLoader(Dataset):
 
     def __getitem__(self, index):
         imgfolder = 'images'
-        img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + 'bmp')
+        img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + '.bmp')
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
         img_ori = cv2.imread(img_path)
@@ -75,7 +75,7 @@ class IRDST_TestSetLoader(Dataset):
 
     def __getitem__(self, index):
         imgfolder = 'images'
-        img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + 'bmp')
+        img_path = os.path.join(self.root, imgfolder, self.imgs_arr[index] + '.bmp')
         seq = self.imgs_arr[index].split('/')[0]
         frame = int(self.imgs_arr[index].split('/')[1])
         img_ori = cv2.imread(img_path)
