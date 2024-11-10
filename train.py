@@ -263,7 +263,7 @@ class Trainer(object):
                 Outputs_Max = torch.sigmoid(outputs)
                 TestOut = Outputs_Max.data.cpu().numpy()[0, 0, 0:m, 0:n]
 
-                pixelsNumber[index] += m * n
+                pixelsNumBatch.append(m*n)
                 if self.save_flag:
                     img = Image.fromarray(uint8(TestOut * 255))
                     folder_name = "%s%s/" % (self.test_save, txt[i].split('/')[0])
