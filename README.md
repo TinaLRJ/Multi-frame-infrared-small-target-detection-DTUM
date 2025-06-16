@@ -18,7 +18,7 @@ NUDT-MIRSDT &nbsp; [[Baidu download dir]](https://pan.baidu.com/s/1pSN350eurMafL
 is a synthesized dataset, which contains 120 sequences. We use 80 sequences for training and 20 sequences for test.
 We divide the test set into two subsets according to their SNR ((0, 3], (3, 10)).
 
-In the test set, targets in 8 sequences are so weak (SNR lower than 3). It is very challenging to detect these targets.
+In the test set, targets in 8 sequences are so weak (SNR lower than 3). It is very challenging to detect these targets. The test set includes Sequence[47, 56, 59, 76, 92, 101, 105, 119].
 
 
 ## Train on NUDT-MIRSDT Dataset
