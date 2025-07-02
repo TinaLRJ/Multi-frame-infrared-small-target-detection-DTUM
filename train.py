@@ -55,7 +55,7 @@ def parse_args():
     parser.add_argument('--DataPath',  type=str, default='./dataset/', help='Dataset path [default: ./dataset/]')
     parser.add_argument('--dataset',   type=str, default='NUDT-MIRSDT', help='Dataset name [dafult: NUDT-MIRSDT]')
     parser.add_argument('--align',  default='False', action='store_true', help='align input frames')
-    parser.add_argument('--training_rate', type=int, default=1, help='Rate of samples in training (1/n) [default: 1]')
+    parser.add_argument('--sample_rate', type=int, default=1, help='Rate of samples in training [default: 1]')
     parser.add_argument('--saveDir',   type=str, default='./results/',
                             help='Save path [defaule: ./results/]')
     parser.add_argument('--train',    type=int, default=0)
@@ -110,7 +110,8 @@ class Trainer(object):
         elif args.dataset == 'IRDST':
             self.train_dataset = IRDST_TrainSetLoader(train_path, fullSupervision=args.fullySupervised, align=args.align)
             self.val_dataset = IRDST_TestSetLoader(self.test_path, align=args.align)
-        self.train_loader = DataLoader(self.train_dataset, batch_size=args.batchsize, shuffle=True, drop_last=True)
+        sampler = RandomSampler(self.train_dataset, num_samples=int(len(self.train_dataset)*args.sample_rate))
+        self.train_loader = DataLoader(self.train_dataset, batch_size=args.batchsize, sampler=sampler, drop_last=True)
         self.val_loader = DataLoader(self.val_dataset, batch_size=1, shuffle=False, )
 
         self.optimizer = optim.Adam(self.net.parameters(), lr=args.lrate, betas=(0.9, 0.99))
@@ -139,9 +140,6 @@ class Trainer(object):
         loss_last = 0.0
         self.net.train()
         for i, data in enumerate(tqdm(self.train_loader), 0):
-            if i % args.training_rate != 0:
-                continue
-
             SeqData_t, TgtData_t, m, n = data
             SeqData, TgtData = Variable(SeqData_t).to(self.device), Variable(TgtData_t).to(self.device)  # b,t,m,n  // b,1,m.n
             self.optimizer.zero_grad()
