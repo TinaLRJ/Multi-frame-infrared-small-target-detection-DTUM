@@ -17,7 +17,7 @@ from sklearn.metrics import auc
 
 from MIRSDTDataLoader import TrainSetLoader, TestSetLoader
 from IRDSTDataLoader import IRDST_TrainSetLoader, IRDST_TestSetLoader
-from SatVideoIRSTD_DataLoader import CSIG_TrainSetLoader, CSIG_TestSetLoader
+from SatVideoIRSTD_DataLoader import SatVideoIRSTD_TrainSetLoader, SatVideoIRSTD_TestSetLoader
 from torch.utils.data import RandomSampler
 
 from models.model_ISNet.train_ISNet import Get_gradientmask_nopadding, Get_gradient_nopadding
@@ -113,8 +113,8 @@ class Trainer(object):
             self.train_dataset = IRDST_TrainSetLoader(train_path, fullSupervision=args.fullySupervised, align=args.align)
             self.val_dataset = IRDST_TestSetLoader(self.test_path, align=args.align)
         elif args.dataset == 'SatVideoIRSTD':    #修改002
-            self.train_dataset = CSIG_TrainSetLoader(train_path, fullSupervision=args.fullySupervised)
-            self.val_dataset = CSIG_TestSetLoader(self.test_path)
+            self.train_dataset = SatVideoIRSTD_TrainSetLoader(train_path, fullSupervision=args.fullySupervised)
+            self.val_dataset = SatVideoIRSTD_TestSetLoader(self.test_path)
         sampler = RandomSampler(self.train_dataset, num_samples=int(len(self.train_dataset)*args.sample_rate))
         self.train_loader = DataLoader(self.train_dataset, batch_size=args.batchsize, sampler=sampler, drop_last=True)
         self.val_loader = DataLoader(self.val_dataset, batch_size=1, shuffle=False, )
