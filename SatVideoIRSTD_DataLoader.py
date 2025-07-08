@@ -8,7 +8,7 @@ import scipy.io as scio
 
 
 #load image
-class CSIG_TrainSetLoader(Dataset):
+class SatVideoIRSTD_TrainSetLoader(Dataset):
     def __init__(self, root, fullSupervision=False):
 
         txtpath = root + 'train_list.txt'
@@ -166,7 +166,7 @@ class CSIG_TrainSetLoader(Dataset):
 
 
 
-class CSIG_TestSetLoader(Dataset):
+class SatVideoIRSTD_TestSetLoader(Dataset):
     def __init__(self, root, fullSupervision=False):
 
         txtpath = root + 'val_list.txt'
@@ -229,64 +229,6 @@ class CSIG_TestSetLoader(Dataset):
         LabelData = torch.from_numpy(LabelData_Img)
         TgtData_out = torch.unsqueeze(LabelData, 0)
         return MixData_out, TgtData_out, m_L, n_L
-        # if m_L == 256 and n_L == 256:
-        #     # Tgt preprocess
-        #     LabelData = torch.from_numpy(LabelData_Img)
-        #     TgtData_out = torch.unsqueeze(LabelData, 0)
-        #     return MixData_out, TgtData_out, m_L, n_L
-
-        # elif m_L == 1024 and n_L == 1024:
-        #     ys, xs = np.where(LabelData_Img > 0)
-        #     if len(ys) == 0:
-        #         top = random.randint(0, m_L - 256)
-        #         left = random.randint(0, n_L - 256)
-        #     else:
-        #         idx = random.randint(0, len(ys) - 1)
-        #         y, x = ys[idx], xs[idx]
-        #         top = y - random.randint(0, 128)
-        #         left = x - random.randint(0, 128)
-        #         top = max(0, top)
-        #         left = max(0, left)
-        #         if top + 256 > 1024:
-        #             top = 1024 - 256
-        #         if left + 256 > 1024:
-        #             left = 1024 - 256
-        #     [n, t, m_M, n_M] = shape(MixData_out)
-
-        #     LabelData_Img_1 = LabelData_Img[top:top + 256, left:left + 256]
-        #     LabelData = torch.from_numpy(LabelData_Img_1)
-        #     TgtData_out = torch.unsqueeze(LabelData, 0)
-        #     MixData_out_1 = MixData_out[:, :, top:top + 256, left:left + 256]
-
-        #     return MixData_out_1, TgtData_out, m_L, n_L
-
-        # elif m_L == 512 and n_L == 640:
-        #     ys, xs = np.where(LabelData_Img > 0)
-        #     if len(ys) == 0:
-        #         top = random.randint(0, m_L - 256)
-        #         left = random.randint(0, n_L - 256)
-        #     else:
-        #         idx = random.randint(0, len(ys) - 1)
-        #         y, x = ys[idx], xs[idx]
-        #         top = y - random.randint(0, 128)
-        #         left = x - random.randint(0, 128)
-        #         top = max(0, top)
-        #         left = max(0, left)
-        #         if top + 256 > 512:
-        #             top = 512 - 256
-        #         if left + 256 > 640:
-        #             left = 640 - 256
-        #     [n, t, m_M, n_M] = shape(MixData_out)
-
-        #     LabelData_Img_1 = LabelData_Img[top:top + 256, left:left + 256]
-        #     LabelData = torch.from_numpy(LabelData_Img_1)
-        #     TgtData_out = torch.unsqueeze(LabelData, 0)
-        #     MixData_out_1 = MixData_out[:, :, top:top + 256, left:left + 256]
-
-        #     return MixData_out_1, TgtData_out, m_L, n_L
-
-        # else:
-        #     raise FileNotFoundError(f"size wong!!!")
 
 
     def __len__(self):
