@@ -17,7 +17,7 @@ from sklearn.metrics import auc
 
 from MIRSDTDataLoader import TrainSetLoader, TestSetLoader
 from IRDSTDataLoader import IRDST_TrainSetLoader, IRDST_TestSetLoader
-from SatVideoIRSTD_DataLoader import SatVideoIRSTD_TrainSetLoader, SatVideoIRSTD_TestSetLoader
+from SatVideoIRSDT_DataLoader import SatVideoIRSDT_TrainSetLoader, SatVideoIRSDT_TestSetLoader
 from torch.utils.data import RandomSampler
 
 from models.model_ISNet.train_ISNet import Get_gradientmask_nopadding, Get_gradient_nopadding
