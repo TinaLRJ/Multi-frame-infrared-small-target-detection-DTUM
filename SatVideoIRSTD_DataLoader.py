@@ -8,13 +8,13 @@ import scipy.io as scio
 
 
 #load image
-class SatVideoIRSTD_TrainSetLoader(Dataset):
+class SatVideoIRSDT_TrainSetLoader(Dataset):
     def __init__(self, root, fullSupervision=False):
 
         txtpath = root + 'train_list.txt'
         txt = np.loadtxt(txtpath, dtype=bytes).astype(str)
         self.imgs_arr = txt
-        self.root = root        # dataset/CSIG/
+        self.root = root        # dataset/SatVideoIRSDT/
         self.fullSupervision = fullSupervision
         self.train_mean = 111.47
         self.train_std = 22.43
@@ -23,10 +23,10 @@ class SatVideoIRSTD_TrainSetLoader(Dataset):
         return int(os.path.splitext(filename)[0])
 
     def __getitem__(self, index):
-        img_path_mix = self.imgs_arr[index]     # 'dataset/CSIG/train\000001\img\000001.png'
+        img_path_mix = self.imgs_arr[index]     # 'dataset/SatVideoIRSDT/train/000001/img/000001.png'
 
         img_path_mix = img_path_mix.replace('\\', '/')
-        dir_path, filename = os.path.split(img_path_mix)  # 'dataset/CSIG/train/000001/img', '000007.png'
+        dir_path, filename = os.path.split(img_path_mix)  # 'dataset/SatVideoIRSDT/train/000001/img', '000007.png'
         folder_name = os.path.basename(os.path.dirname(dir_path))  # '000001'
         img_dir_root = os.path.dirname(dir_path)  # 'dataset/CSIG/train/000001'
 
@@ -166,7 +166,7 @@ class SatVideoIRSTD_TrainSetLoader(Dataset):
 
 
 
-class SatVideoIRSTD_TestSetLoader(Dataset):
+class SatVideoIRSDT_TestSetLoader(Dataset):
     def __init__(self, root, fullSupervision=False):
 
         txtpath = root + 'val_list.txt'
@@ -181,10 +181,10 @@ class SatVideoIRSTD_TestSetLoader(Dataset):
         return int(os.path.splitext(filename)[0])
 
     def __getitem__(self, index):
-        img_path_mix = self.imgs_arr[index]  # 'dataset/CSIG/train\000001\img\000001.png'
+        img_path_mix = self.imgs_arr[index]  # 'dataset/SatVideoIRSDT/train\000001\img\000001.png'
 
         img_path_mix = img_path_mix.replace('\\', '/')
-        dir_path, filename = os.path.split(img_path_mix)  # 'dataset/CSIG/train/000001/img', '000007.png'
+        dir_path, filename = os.path.split(img_path_mix)  # 'dataset/SatVideoIRSDT/train/000001/img', '000007.png'
         folder_name = os.path.basename(os.path.dirname(dir_path))  # '000001'
         img_dir_root = os.path.dirname(dir_path)  # 'dataset/CSIG/train/000001'
 
