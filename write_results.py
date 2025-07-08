@@ -97,34 +97,3 @@ def writeIRSeq_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_
         args.model + args.loss_func, epoch + 1, Th_Seg[seg], TrueNumAll[:, seg].sum(),
         Pd_all[seg], FalseNumAll[:, seg].sum(), Fa_all[seg], auc_all))
     return
-
-
-
-def writeCSIG_ROC(FalseNumBatch, TrueNumBatch, TgtNumBatch, pixelsNumBatch, Th_Seg, save_path, args, epoch):
-    FalseNumAll = np.array(FalseNumBatch).reshape((-1, len(Th_Seg))).sum(axis=0)
-    TrueNumAll = np.array(TrueNumBatch).reshape((-1, len(Th_Seg))).sum(axis=0)
-    TgtNumAll = np.array(TgtNumBatch).reshape((-1, len(Th_Seg))).sum(axis=0)
-    pixelsNumBatch = np.sum([x.item() if torch.is_tensor(x) else x for x in pixelsNumBatch])
-
-    Pd_all = TrueNumAll / TgtNumAll
-    Fa_all = FalseNumAll / pixelsNumBatch
-    auc_all = auc(Fa_all, Pd_all)
-
-    writelines = open(save_path + 'Epoch' + str(epoch+1) + '_ROC_ShootingRules.txt', 'w')
-
-    writelines.write('Final results:\tAUC:%.5f\n' % auc_all)
-    for th_i in range(len(Th_Seg)):
-        writelines.write('Th_Seg = %e:\tPD:[%d/%d, %.5f]\tFA:[%d, %e]\n' % (Th_Seg[th_i], TrueNumAll[th_i],
-                                                                            TgtNumAll[th_i],
-                                                                            TrueNumAll[th_i] / TgtNumAll[
-                                                                                                        th_i],
-                                                                            FalseNumAll[th_i],
-                                                                            FalseNumAll[
-                                                                            th_i] / pixelsNumBatch))
-    writelines.close()
-
-    seg = list(Th_Seg).index(0.5)
-    print('model: %s, epoch: %d, Th_Seg = %.4e, PD:[%d, %.5f], FA:[%d, %.4e], AUC:%.5f' % (
-        args.model + args.loss_func, epoch + 1, Th_Seg[seg], TrueNumAll[seg],
-        Pd_all[seg], FalseNumAll[seg], Fa_all[seg], auc_all))
-    return
