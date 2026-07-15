@@ -6,7 +6,7 @@ Pytorch implementation of our Direction-coded Temporal U-shape Module (DTUM).&nb
 * We design a direction-coded convolution block (DCCB) to extract motion information by encoding the motion direction into features.
 * Based on DCCB, we propose a simple yet effective DTUM to enhance dim targets while suppressing false alarms for MIRST detection. DTUM can be equipped with most single-frame networks to leverage spatial–temporal information for MIRST.
 * We develop an NUDT-MIRSDT dataset with both mask and point-level annotations for MIRST detection.
-* **[We propose a hard point mining (HPM) loss function, which works wonders in point-supervised learning!]()**
+* **[We propose a hard point mining (HPM) loss function, which works wonders in point-supervised learning!](https://github.com/TinaLRJ/Multi-frame-infrared-small-target-detection-DTUM/blob/main/losses/loss_OHEM.py)**
 
 ## Requirements
 - Python 3
