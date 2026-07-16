@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 
 from losses.loss_fullySupervised import Focal_Loss, SoftIoULoss, SoftLoULoss1, muti_bce_loss_fusion, muti_SoftLoULoss1_fusion
-from losses.loss_OHEM import MyWeightTopKLoss_Absolutly
-from losses.loss_BCETopKLoss import MyWeightBCETopKLoss
+from losses.loss_OHEM import OHEMloss
+from losses.loss_HPM import HPMloss
 
 
 
@@ -21,10 +21,10 @@ def loss_chose(args):
     elif args.loss_func == 'FocalLoss':
         cirterion = Focal_Loss(alpha=MyWgt, gamma=2)
     elif args.loss_func == 'OHEM':
-        cirterion = MyWeightTopKLoss_Absolutly(alpha=MyWgt, gamma=2, MaxClutterNum=args.MaxClutterNum,
+        cirterion = OHEMloss(alpha=MyWgt, gamma=2, MaxClutterNum=args.MaxClutterNum,
                                      ProtectedArea=args.ProtectedArea)
     elif args.loss_func == 'HPM':
-        cirterion = MyWeightBCETopKLoss(alpha=MyWgt, gamma=2, MaxClutterNum=args.MaxClutterNum,
+        cirterion = HPMloss(alpha=MyWgt, gamma=2, MaxClutterNum=args.MaxClutterNum,
                                      ProtectedArea=args.ProtectedArea)
     else:
         raise('An unexpected loss function!')
