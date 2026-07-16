@@ -3,9 +3,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class MyWeightBCETopKLoss(nn.Module):
+class HPMloss(nn.Module):
     def __init__(self,gamma=0, alpha=None, size_average=False, MaxClutterNum=39, ProtectedArea=2):
-        super(MyWeightBCETopKLoss, self).__init__()
+        super(HPMloss, self).__init__()
 
         self.bce_loss = nn.BCEWithLogitsLoss(reduce=False)
 
