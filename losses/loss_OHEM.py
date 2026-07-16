@@ -3,9 +3,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class MyWeightTopKLoss_Absolutly(nn.Module):
+class OHEMloss(nn.Module):
     def __init__(self,gamma=0, alpha=None, size_average=False, MaxClutterNum=39, ProtectedArea=2):
-        super(MyWeightTopKLoss_Absolutly, self).__init__()
+        super(OHEMloss, self).__init__()
 
         self.bce_loss = nn.BCEWithLogitsLoss(reduce=False)
 
